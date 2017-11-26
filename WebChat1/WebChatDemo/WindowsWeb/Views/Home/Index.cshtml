@@ -1,0 +1,68 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+
+
+<div class="row">
+
+    <div id="bot" style="height:300;width:300" />
+    <script src="~/Scripts/webchat/botchat.js"></script>
+    <script>
+        var userLang = navigator.language || navigator.userLanguage;
+
+        var nVer = navigator.appVersion;
+        var nAgt = navigator.userAgent;
+        var browserName = navigator.appName;
+        var OSName = "Unknown OS";
+        if (navigator.appVersion.indexOf("Win") != -1) OSName = "Windows";
+        if (navigator.appVersion.indexOf("Mac") != -1) OSName = "MacOS";
+        if (navigator.appVersion.indexOf("X11") != -1) OSName = "UNIX";
+        if (navigator.appVersion.indexOf("Linux") != -1) OSName = "Linux";
+        var os = { version: nVer, agent: nAgt, browser: browserName, os: OSName };
+        var secret = {
+            secret: '-aJnKkHwYC0.cwA.-k8.rvLYTuVmkPNOZ215gN1FY37wIBKDK6dyDkMOG53ckV8'
+        }
+        var dl = new BotChat.DirectLine(secret);
+        //In Javascript ES6, we could use {...dl, postActivity:activity=>{...activity,activity.channelData.test ='ok';dl.postActivity(activity);}
+        //To Clone a BotConnection Object and assign in BotChat.App constructor
+        //However, In IE we are unable to use above syntax, istead, we need to override postActivity() using below codes
+        var mock = new BotChat.DirectLine(secret);
+        mock._postActivity = dl.postActivity;
+        mock.postActivity = function (activity) {
+            activity.channelData.os = os;
+            activity.channelData.language = userLang;
+            return mock._postActivity(activity);
+        }
+
+        BotChat.App({
+            botConnection: mock,
+            user: { id: 'michael-chi' },
+            bot: { id: 'auo root bot' },
+            resize: 'detect'
+        }, document.getElementById("bot"));
+    </script>
+    @*<script>
+
+    var userLang = navigator.language || navigator.userLanguage;
+
+
+    var dl = new BotChat.DirectLine({ secret: '-aJnKkHwYC0.cwA.-k8.rvLYTuVmkPNOZ215gN1FY37wIBKDK6dyDkMOG53ckV8' });
+    var postMessage = function (activity) {
+        alert('lang=' + userLang);
+        activity.channelData.lang = userLang;// = new { lang: userLang };
+        dl.postActivity(activity);
+    };
+    BotChat.App({
+        directLine: { secret: '-aJnKkHwYC0.cwA.-k8.rvLYTuVmkPNOZ215gN1FY37wIBKDK6dyDkMOG53ckV8' },
+        postActivity: postMessage,
+        user: { id: 'User.Identity.Name' },
+        bot: { id: 'Dada::DemoWeb' },
+        resize: 'detect'
+    }, document.getElementById("bot"));
+    
+    </script>*@
+
+</div>
+
+

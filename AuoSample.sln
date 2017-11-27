@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DispatcherBot", "Dispatcher
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HRBot", "Children\HRBot\HRBot.csproj", "{01503B90-E52A-4D5F-9F3A-BD7A650DE23D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsWeb", "WebChat1\WebChatDemo\WindowsWeb\WindowsWeb.csproj", "{80CF5020-4F5F-4BA4-9AB8-FE38D35CF80E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{01503B90-E52A-4D5F-9F3A-BD7A650DE23D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{01503B90-E52A-4D5F-9F3A-BD7A650DE23D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{01503B90-E52A-4D5F-9F3A-BD7A650DE23D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80CF5020-4F5F-4BA4-9AB8-FE38D35CF80E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80CF5020-4F5F-4BA4-9AB8-FE38D35CF80E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80CF5020-4F5F-4BA4-9AB8-FE38D35CF80E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80CF5020-4F5F-4BA4-9AB8-FE38D35CF80E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

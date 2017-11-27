@@ -35,8 +35,11 @@ namespace DispatcherBot
                 var message = activity as IMessageActivity;
                 if(message != null && !string.IsNullOrEmpty(message.Text))
                 {
+                    dynamic client = (dynamic)(activity.ChannelData);
+                    string clientName = (string)client.clientName;
                     var commandUrl = (from cmd in DataSource.RegisteredBots
                                       where message.Text.Equals(cmd.Key, StringComparison.InvariantCultureIgnoreCase)
+                                        || (!string.IsNullOrEmpty(clientName) && clientName.Equals(cmd.Key, StringComparison.InvariantCultureIgnoreCase))
                                       select cmd.Value).FirstOrDefault();
                     if(commandUrl != null && !string.IsNullOrEmpty(commandUrl))
                     {
@@ -45,7 +48,6 @@ namespace DispatcherBot
                         await stateClient.BotState.SetConversationDataAsync(activity.ChannelId, conversationID, conversationData);
                     }
                 }
-//                await Conversation.SendAsync(activity, () => new Dialogs.RootDialog());
             }
 
             if (string.IsNullOrEmpty(forwardingUrl) || Request.RequestUri.ToString().Equals(forwardingUrl,StringComparison.InvariantCultureIgnoreCase))
@@ -91,8 +93,8 @@ namespace DispatcherBot
                 {
                     foreach (var header in Request.Headers)
                     {
-                        if (header.Key == "Authorization")
-                            continue;
+                        //if (header.Key == "Authorization")
+                        //    continue;
                         request.Headers.Add(header.Key, header.Value);
                     }
                     request.Headers.Host = request.RequestUri.Host;
@@ -101,7 +103,9 @@ namespace DispatcherBot
                     //request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", botBearerToken);
                     request.Content = content;
                     //return await http.PostAsync(request.RequestUri,content);
-                    return await http.SendAsync(request);
+                    var  resp = await http.SendAsync(request);
+
+                    return resp;
 
                 }
                 catch (Exception exp)

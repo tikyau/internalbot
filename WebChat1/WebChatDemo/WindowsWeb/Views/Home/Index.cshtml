@@ -31,6 +31,7 @@
         mock._postActivity = dl.postActivity;
         mock.postActivity = function (activity) {
             activity.channelData.os = os;
+            activity.channelData.clientName = 'HR BOT';
             activity.channelData.language = userLang;
             return mock._postActivity(activity);
         }

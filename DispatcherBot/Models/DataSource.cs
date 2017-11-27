@@ -7,19 +7,21 @@ namespace DispatcherBot.Models
 {
     public class DataSource
     {
-
+#if true
         public static Dictionary<string, string> RegisteredBots = new Dictionary<string, string>
         {
             { "IT BOT","ITURL" },
             { "HR BOT","https://hrbotdemo001.azurewebsites.net/api/messages"},
             { "Main BOT","https://dispatcherbotdemo.azurewebsites.net/api/messages"}
         };
-        //public static Dictionary<string, string> RegisteredBots = new Dictionary<string, string>
-        //{
-        //    { "IT BOT","ITURL" },
-        //    { "HR BOT","https://hrbotdemo001.azurewebsites.net/api/messages"},
-        //    { "Main BOT","http://lcoalhost:23978/api/messages"}
-        //};
+#else
+        public static Dictionary<string, string> RegisteredBots = new Dictionary<string, string>
+        {
+            { "IT BOT","ITURL" },
+            { "HR BOT","http://localhost:10838//api/messages"},
+            { "Main BOT","http://lcoalhost:23978/api/messages"}
+        };
+#endif
         public static Dictionary<string, KeyValuePair<string, string>> RegisteredBotSecrets = new Dictionary<string, KeyValuePair<string, string>>
         {
             { "IT BOT", new KeyValuePair<string,string>("","") },

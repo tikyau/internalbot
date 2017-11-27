@@ -32,7 +32,7 @@ Below illustrate high-level architecture
   - A forwarding logic so that it knows when to forward
     1. In this sample, we will be storing forwardingUrl in ConversationData. Everytime when DispatcherBot receives a message, it check if forwardingUrl exists, if so, it forward messages to corresponding expert bot URL. Otherwise it handles that message locally.
 5. Now, open MessagesController.cs. In Post() function, add below codes
-```sh
+```csharp
 publicasync Task<HttpResponseMessage> Post([FromBody]Activity activity)
 {
 string conversationID = activity.Conversation.Id;
@@ -45,71 +45,73 @@ conversationID);
 var forwardingUrl = conversationData.GetProperty<string>(Consts.ForwardingUrlKey);
 ```
 1. Next we check if incoming messages are of type Message. When user says the trigger word of a certain backend expert bot (such as HR Bot), or we configured the client to be a HR BOT (this is configured via setting Activity.channelData.clientName property). We retrieve forwarding Url and set this url to conversation data. (the forwarding url is the url of expert bot&#39;s entry point, typically https://<some where>/api/messages.
-```sh
+```csharp
 if (activity.Type == ActivityTypes.Message)
 {
-var message = activity as IMessageActivity;
-if(message != null &amp;&amp; !string.IsNullOrEmpty(message.Text))
-{
-dynamic client = (dynamic)(activity.ChannelData);
-string clientName = (string)client.clientName;
-var commandUrl = (from cmd in DataSource.RegisteredBots
-where message.Text.Equals(cmd.Key,StringComparison.InvariantCultureIgnoreCase)  || (!string.IsNullOrEmpty(clientName) &amp;&amp; clientName.Equals(cmd.Key, StringComparison.InvariantCultureIgnoreCase))
-select cmd.Value).FirstOrDefault();
-if(commandUrl != null &amp;&amp; !string.IsNullOrEmpty(commandUrl))
-{
-forwardingUrl = commandUrl;
-conversationData.SetProperty<string>(Consts.ForwardingUrlKey, forwardingUrl);
-await stateClient.BotState.SetConversationDataAsync(
-activity.ChannelId, conversationID, conversationData);
-}
-}
+    var message = activity as IMessageActivity;
+    if(message != null &amp;&amp; !string.IsNullOrEmpty(message.Text))
+    {
+        dynamic client = (dynamic)(activity.ChannelData);
+        string clientName = (string)client.clientName;
+        var commandUrl = (from cmd in DataSource.RegisteredBots
+            where message.Text.Equals(cmd.Key,StringComparison.InvariantCultureIgnoreCase)  || (!string.IsNullOrEmpty(clientName) && clientName.Equals(cmd.Key,StringComparison.InvariantCultureIgnoreCase))
+        select cmd.Value).FirstOrDefault();
+        if(commandUrl != null && !string.IsNullOrEmpty(commandUrl))
+        {
+            forwardingUrl = commandUrl;
+            conversationData.SetProperty<string>(Consts.ForwardingUrlKey,forwardingUrl);
+            await stateClient.BotState.SetConversationDataAsync(
+                activity.ChannelId, conversationID, conversationData);
+        }
+    }
 }
 ```
 1. If we do not have forwardingUrl retrieved, meaning that this message is to be handled locally in root Bot
-```sh
-if (string.IsNullOrEmpty(forwardingUrl) || Request.RequestUri.ToString().Equals(forwardingUrl,StringComparison.InvariantCultureIgnoreCase))
+```csharp
+if (string.IsNullOrEmpty(forwardingUrl) || Request.RequestUri.ToString()
+.Equals(forwardingUrl,StringComparison.InvariantCultureIgnoreCase))
 {
-if(activity.Type == ActivityTypes.Message)
-{
-await Conversation.SendAsync(activity, () => new RootDialog());
-}
-else
-{
-HandleSystemMessage(activity);
-}
-var response = Request.CreateResponse(HttpStatusCode.OK);
-       return response;
+    if(activity.Type == ActivityTypes.Message)
+    {
+        await Conversation.SendAsync(activity, () => new RootDialog());
+    }
+    else
+    {
+     HandleSystemMessage(activity);
+    }
+    var response = Request.CreateResponse(HttpStatusCode.OK);
+    return response;
 }
 ```
 1. If we do have forwardingUrl, we do forwarding here
-```sh
+```csharp
 var http = new HttpClient();
 var request = new HttpRequestMessage
 {
-RequestUri = new Uri(forwardingUrl),
-Method = HttpMethod.Post
+    RequestUri = new Uri(forwardingUrl),
+    Method = HttpMethod.Post
 };
 
 try{
-foreach (var header in Request.Headers)
-{
-request.Headers.Add(header.Key, header.Value);
-}
-request.Headers.Host = request.RequestUri.Host;
-var json = JsonConvert.SerializeObject(activity);
-var content = new StringContent(json, Encoding.UTF8, "application/json");
-request.Content = content;
-var  resp = await http.SendAsync(request);
-return resp;
-}
-catch (Exception exp)
-{
-throw;
+        foreach (var header in Request.Headers)
+        {
+            request.Headers.Add(header.Key, header.Value);
+        }
+        request.Headers.Host = request.RequestUri.Host;
+        var json = JsonConvert.SerializeObject(activity);
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
+        request.Content = content;
+        var  resp = await http.SendAsync(request);
+        return resp;
+    }
+    catch (Exception exp)
+    {
+        throw;
+    }
 }
 ```
 1. Your code should looks like below
-```sh
+```csharp
         public async Task<HttpResponseMessage> Post([FromBody]Activity activity)
         {
             string conversationID = activity.Conversation.Id;
@@ -177,7 +179,7 @@ throw;
 1. Now, create a DataSource.cs which will retrieve Bot registration information from database, in this sample code I am just using a mock datasource class where have everything hard-coded.
 
 **NOTE** : As mentioned, we will be configuring each bot using Root Bot&#39;s AppId and AppPassword
-```sh
+```csharp
 using System;
 using System.Collections.Generic;
 using System.Linq;

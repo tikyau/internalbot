@@ -21,7 +21,7 @@
         if (navigator.appVersion.indexOf("Linux") != -1) OSName = "Linux";
         var os = { version: nVer, agent: nAgt, browser: browserName, os: OSName };
         var secret = {
-            secret: '-aJnKkHwYC0.cwA.-k8.rvLYTuVmkPNOZ215gN1FY37wIBKDK6dyDkMOG53ckV8'
+            secret: '<DIRECTLINE SECRET>'
         }
         var dl = new BotChat.DirectLine(secret);
         //In Javascript ES6, we could use {...dl, postActivity:activity=>{...activity,activity.channelData.test ='ok';dl.postActivity(activity);}
@@ -31,7 +31,7 @@
         mock._postActivity = dl.postActivity;
         mock.postActivity = function (activity) {
             activity.channelData.os = os;
-            activity.channelData.clientName = 'HR BOT';
+            //activity.channelData.clientName = 'HR BOT';
             activity.channelData.language = userLang;
             return mock._postActivity(activity);
         }

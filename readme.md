@@ -6,10 +6,7 @@ This document introduces how to implement Bot-to-Bot handover in Microsoft Bot F
 
 In this document, we will be providing working sample codes that illustrate how to implement a "root bot" that accept user messages and provide a list of integrated backend "expert bot". When use select a expert bot he wants to communicate with, the "root bot" forward all following messages to the backend "expert bot". User can then use a pre-defined "keyword" to return to "root bot"
 
-This document is intending to provide instruction for enterprises to create their internal bot consumed by internal users via WebChat control. Some codes or considerations may not fit to consumer bot scenario. 3
-
-# rd
- party IM app such as Skype, Facebook messengers…etc may not be able to use in this scenario.
+This document is intending to provide instruction for enterprises to create their internal bot consumed by internal users via WebChat control. Some codes or considerations may not fit to consumer bot scenario. 3rd party IM app such as Skype, Facebook messengers…etc may not be able to use in this scenario.
 
 We assume you have basic Microsoft Bot Frmaework knowledge including how to register Bot in Bot Framework portal and how to develop a Bot.
 
